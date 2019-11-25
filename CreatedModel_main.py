@@ -260,13 +260,13 @@ model.summary()
 
 
 adm = Adam()
-model2.compile(loss=tensorflow.keras.losses.categorical_crossentropy, optimizer=adm,metrics=['accuracy'])
+#model2.compile(loss=tensorflow.keras.losses.categorical_crossentropy, optimizer=adm,metrics=['accuracy'])
 
 
 # In[20]:
 
 
-model2.summary()
+# model2.summary()
 
 
 # In[8]:
@@ -335,7 +335,7 @@ l3 = np.array(l3)
 # In[11]:
 
 
-from random import shuffle
+# from random import shuffle
 images = np.concatenate((img1[:140,:],img2[:140,:],img3[:140,:]),axis=0)
 labels = np.concatenate((l1[:140,:],l2[:140,:],l3[:140,:]),axis = 0)
 print(images.shape)
@@ -345,31 +345,10 @@ print(labels.shape)
 # In[ ]:
 
 
-def CA_VGG_LSTM(shape):
-    model = Sequential()
-    model.add(Input(shape=shape))
-
-    model.add(Conv2D(512, (3, 3), activation='relu', name='block5_conv1'))
-    model.add(Conv2D(512, (3, 3), activation='relu', padding='same', name='block5_conv2'))
-    model.add(Conv2D(512, (3, 3), activation='relu', padding='same', name='block5_conv3'))
-
-    model.add(Conv2D(21, kernel_size=(1, 1), strides=(1, 1), kernel_initializer='glorot_uniform'))
-    model.add(Reshape((21, 30*30), input_shape=(30, 30, 21)))
-
-    model.add(LSTM(21, input_shape=(21, 30*30), activation='tanh', kernel_initializer=initializers.RandomUniform(minval=-0.1, maxval=0.1, seed=None)))
-
-    model.add(Dense(21, activation='softmax'))
-
-    return model
-
 
 # In[ ]:
 
 
-model = CA_VGG_LSTM((32,32,512))
-adm = Adam(lr = 0.1)
-model.compile(loss=tensorflow.keras.losses.categorical_crossentropy, optimizer=adm,metrics=['accuracy'])
-print(model.summary())
 
 
 # In[ ]:
@@ -403,7 +382,7 @@ train = model.fit(X_train, Y_train, batch_size = 32, epochs = 20, verbose=1)
 # In[ ]:
 
 
-test_eval = model2.evaluate(X_test, Y_test, batch_size = 1,verbose = 1)
+test_eval = model.evaluate(X_test, Y_test, batch_size = 1,verbose = 1)
 print('Test loss:', test_eval[0])
 print('Test accuracy:', test_eval[1])
 
@@ -411,19 +390,19 @@ print('Test accuracy:', test_eval[1])
 # In[ ]:
 
 
-img1 = X_test
-label = Y_test
-predicted_classes = model.predict(img1)
-predicted_classes = np.argmax(np.round(predicted_classes),axis=1)
-print(predicted_classes)
-print(label)
-correct = np.where(predicted_classes==Y_test)[0]
-print("Found %d correct labels" % len(correct))
-for i, correct in enumerate(correct[:9]):
-    plt.subplot(3,3,i+1)
-    plt.imshow(X_test[correct].reshape(28,28), cmap='gray', interpolation='none')
-    plt.title("Predicted {}, Class {}".format(predicted_classes[correct], Y_test[correct]))
-    plt.tight_layout()
+# img1 = X_test
+# label = Y_test
+# predicted_classes = model.predict(img1)
+# predicted_classes = np.argmax(np.round(predicted_classes),axis=1)
+# print(predicted_classes)
+# print(label)
+# correct = np.where(predicted_classes==Y_test)[0]
+# print("Found %d correct labels" % len(correct))
+# for i, correct in enumerate(correct[:9]):
+#     plt.subplot(3,3,i+1)
+#     plt.imshow(X_test[correct].reshape(28,28), cmap='gray', interpolation='none')
+#     plt.title("Predicted {}, Class {}".format(predicted_classes[correct], Y_test[correct]))
+#     plt.tight_layout()
 
 
 # In[7]:
@@ -462,15 +441,6 @@ fashion_train_dropout = fashion_model.fit(X_train, Y_train, batch_size=10,epochs
 
 
 # In[1]:
-
-
-import tensorflow_datasets
-
-
-# In[2]:
-
-
-import tensorflow_hub
 
 
 # In[ ]:
